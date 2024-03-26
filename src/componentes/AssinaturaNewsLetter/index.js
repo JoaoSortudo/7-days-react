@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import React, {useState} from "react";
+
 const AssinaturaContainer = styled.div`
     width: 40vw;
     padding-left: 15%;
@@ -32,18 +34,44 @@ const NewsLetter = styled.section`
 const Input = styled.input`
     width: 70%;
     border: none;
-
-    &::placeholder {
-        padding-left: 10px;
-}
+    padding-left: 10px;
 `
 const Botao = styled.button`
     border: none;
     color: #f7f7f7;
     background-color: #ffcb47;
     width: 30%;
+    cursor: pointer;
 `
 function AssinaturaNewsLetter() {
+
+    const [email, setEmail] = useState('');
+
+    const [emailValido, setEmailValido] = useState(false);
+
+    const validaEmail = (email) => {
+        if(email.includes('@') && email.includes('.')) {
+            return true;
+        }
+      };
+    
+    //Atualiza o 'const email' sempre que um novo email for digitado no input
+    const EntradaDeEmail = (event) => {
+        const emailNovo = event.target.value;
+        setEmail(emailNovo);
+        setEmailValido(validaEmail(emailNovo));
+      };  
+    //Envia um alerta para o usuário agradecendo ou pedindo para que entre com um email válido
+    const SubmeteAssinatura = (event) => {
+        //para evitar que a página recarregue após o submit
+        event.preventDefault();
+        if (emailValido) {
+          alert(`Obrigado pela sua assinatura, você receberá nossas novidades no e-mail ${email}`);
+        } else {
+          alert('Por favor, insira um e-mail válido.');
+        }
+      };
+
     return(
         <AssinaturaContainer>
             <H1Container>
@@ -55,8 +83,11 @@ function AssinaturaNewsLetter() {
                 Entre com seu e-mail e assine nossa newsletter para saber das novidades da marca.
             </H2Container>
             <NewsLetter>
-                <Input placeholder="Insira seu e-mail"/>
-                <Botao>Assinar Newsletter</Botao>
+                <Input 
+                    placeholder="Insira seu e-mail"
+                    onChange={EntradaDeEmail}
+                />
+                <Botao type="submit" onClick={SubmeteAssinatura}>Assinar Newsletter</Botao>
             </NewsLetter>
         </AssinaturaContainer>
     )
